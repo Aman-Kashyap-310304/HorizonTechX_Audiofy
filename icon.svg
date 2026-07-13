@@ -1,0 +1,124 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1024 1024"
+  width="1024"
+  height="1024"
+>
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#9C27FF"/>
+      <stop offset="45%" stop-color="#5C3BFF"/>
+      <stop offset="100%" stop-color="#19C6FF"/>
+    </radialGradient>
+
+    <!-- Outer Ring Gradient -->
+    <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF3AA7"/>
+      <stop offset="55%" stop-color="#6A35FF"/>
+      <stop offset="100%" stop-color="#19C6FF"/>
+    </linearGradient>
+
+    <!-- Left Bars -->
+    <linearGradient id="pinkBars" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FF76C8"/>
+      <stop offset="100%" stop-color="#D85CFF"/>
+    </linearGradient>
+
+    <!-- Right Bars -->
+    <linearGradient id="cyanBars" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#7CE9FF"/>
+      <stop offset="100%" stop-color="#38D3FF"/>
+    </linearGradient>
+
+    <!-- Play Gradient -->
+    <linearGradient id="playGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF3AA7"/>
+      <stop offset="100%" stop-color="#3C7DFF"/>
+    </linearGradient>
+
+    <!-- Soft Shadow -->
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="18"
+        flood-color="#000"
+        flood-opacity=".18"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <circle
+    cx="512"
+    cy="512"
+    r="480"
+    fill="url(#bgGlow)"
+    filter="url(#shadow)"
+  />
+
+  <!-- Outer Gradient Ring -->
+  <circle
+    cx="512"
+    cy="512"
+    r="488"
+    fill="none"
+    stroke="url(#ringGradient)"
+    stroke-width="26"
+  />
+
+  <!-- Inner White Ring -->
+  <circle
+    cx="512"
+    cy="512"
+    r="430"
+    fill="none"
+    stroke="#fff"
+    stroke-width="18"
+  />
+
+  <!-- Left Audio Bars -->
+  <g fill="url(#pinkBars)">
+    <rect x="120" y="470" width="26" height="90" rx="13"/>
+    <rect x="170" y="430" width="26" height="170" rx="13"/>
+    <rect x="220" y="370" width="26" height="290" rx="13"/>
+    <rect x="270" y="410" width="26" height="190" rx="13"/>
+    <rect x="320" y="455" width="26" height="105" rx="13"/>
+  </g>
+
+  <!-- Right Audio Bars -->
+  <g fill="url(#cyanBars)">
+    <rect x="678" y="455" width="26" height="105" rx="13"/>
+    <rect x="728" y="370" width="26" height="290" rx="13"/>
+    <rect x="778" y="410" width="26" height="190" rx="13"/>
+    <rect x="828" y="470" width="26" height="90" rx="13"/>
+  </g>
+
+  <!-- Music Note -->
+  <g fill="#fff">
+    <!-- Stem -->
+    <path
+      d="
+        M452 300
+        C452 278 465 260 486 254
+        L675 200
+        C699 193 718 210 718 235
+        L718 602
+        C718 624 700 642 678 642
+        C656 642 638 624 638 602
+        L638 300
+        L492 341
+        L492 610
+        C492 632 474 650 452 650
+        C430 650 412 632 412 610
+        L412 331
+        C412 315 426 304 452 300Z
+      "/>
+
+    <!-- Note Circle -->
+    <circle cx="512" cy="670" r="176"/>
+  </g>
+
+  <!-- Play Triangle -->
+  <path
+    d="M480 590 L480 750 L620 670 Z"
+    fill="url(#playGradient)"
+  />
+</svg>
