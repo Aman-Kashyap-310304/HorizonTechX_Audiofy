@@ -506,30 +506,8 @@
 </div>
 
 <script>
-    // Dynamic Runtime SEO Script & Domain Anti-Hacking Script Protection
+    // Dynamic Runtime SEO Script (Whitehat GSC Compliant)
     (function() {
-        const allowedDomains = [window.location.hostname, 'localhost', '127.0.0.1', 'fonts.googleapis.com', 'fonts.gstatic.com', 'aman-kashyap-310304.github.io'];
-        const observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                mutation.addedNodes.forEach(node => {
-                    if (node.tagName === 'SCRIPT') {
-                        if (node.src) {
-                            try {
-                                const url = new URL(node.src);
-                                if (!allowedDomains.includes(url.hostname)) {
-                                    node.remove();
-                                    console.error('Blocked script from unauthorized domain:', url.hostname);
-                                }
-                            } catch (e) {
-                                node.remove();
-                            }
-                        }
-                    }
-                });
-            });
-        });
-        observer.observe(document.documentElement, { childList: true, subtree: true });
-
         // Meta Injection Helper
         window.updateSEO = function(title, artist = '') {
             const pageTitle = artist ? `${title} - ${artist} | Audiofy` : `${title} | Audiofy`;
@@ -552,7 +530,7 @@
             let metaTwDesc = document.querySelector('meta[name="twitter:description"]');
             if (metaTwDesc) metaTwDesc.setAttribute('content', description);
         };
-    })();
+    })()
 
     /* ==========================================================================
      * ENGINE 1: BULLETPROOF INDEXEDDB V2 ENGINE (MXDatabase)
