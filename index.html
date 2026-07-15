@@ -427,7 +427,20 @@
                 <div><h2><svg width="32" height="32" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>My Vault</h2></div>
                 <div class="section-meta" id="vault-count">0 Tracks</div>
             </div>
-            <div id="grid-my-vault" class="vault-grid"></div>
+            <div id="grid-my-vault" class="vault-grid">
+                <!-- Static SEO Content to prevent Soft 404 indexing errors -->
+                <div class="static-seo-welcome" style="grid-column: 1 / -1; padding: 40px 20px; text-align: center; max-width: 600px; margin: 0 auto;">
+                    <h3 style="font-size: 20px; font-weight: 700; color: white; margin-bottom: 12px;">Your Personal Audiofy Vault</h3>
+                    <p style="font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px;">
+                        Audiofy is a high-performance offline audio library and music search app. Stream 30-second studio music previews directly from the iTunes music catalog, or upload your own audio and video files from your device to configure custom artwork, titles, and artist details in your offline database.
+                    </p>
+                    <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                        <span style="background: var(--surface-hover); border: 1px solid var(--border); padding: 8px 14px; border-radius: 20px; font-size: 12px; color: var(--text);">iTunes Search API</span>
+                        <span style="background: var(--surface-hover); border: 1px solid var(--border); padding: 8px 14px; border-radius: 20px; font-size: 12px; color: var(--text);">IndexedDB Offline Vault</span>
+                        <span style="background: var(--surface-hover); border: 1px solid var(--border); padding: 8px 14px; border-radius: 20px; font-size: 12px; color: var(--text);">Responsive Audio Dock</span>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section id="view-loved-ones" class="viewport-section">
@@ -453,7 +466,15 @@
                 <div><h2 id="render-search-title"><svg width="32" height="32" viewBox="0 0 24 24" fill="var(--accent)"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>Search Results</h2></div>
                 <div class="section-meta">iTunes Studio Previews</div>
             </div>
-            <div id="grid-search-results" class="vault-grid"></div>
+            <div id="grid-search-results" class="vault-grid">
+                <!-- Static SEO Content to prevent Soft 404 indexing errors -->
+                <div class="static-seo-welcome" style="grid-column: 1 / -1; padding: 40px 20px; text-align: center; max-width: 600px; margin: 0 auto;">
+                    <h3 style="font-size: 20px; font-weight: 700; color: white; margin-bottom: 12px;">Explore Audiofy Search</h3>
+                    <p style="font-size: 14px; color: var(--muted); line-height: 1.6;">
+                        Use the search bar at the top of the page to find and explore free 30-second music previews from the Apple iTunes catalog. Save your favorite tracks into your custom folders or loved ones playlists, and manage them offline.
+                    </p>
+                </div>
+            </div>
         </section>
     </main>
 
