@@ -189,7 +189,7 @@
             width: 100%; padding: 12px 14px; border-radius: 10px; border: none;
             background: transparent; color: var(--muted); font-weight: 500; font-size: 14px;
             text-align: left; cursor: pointer; display: flex; align-items: center; justify-content: space-between;
-            transition: var(--transition); gap: 10px;
+            transition: var(--transition); gap: 10px; text-decoration: none; display: inline-flex; width: 100%;
         }
         .nav-btn .nav-label { display: flex; align-items: center; gap: 12px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         .nav-btn svg { flex-shrink: 0; fill: currentColor; }
@@ -406,8 +406,8 @@
             <button id="sidebar-close-mobile" class="sidebar-collapse" style="display:none;">✕</button>
         </div>
         <ul class="sidebar-nav">
-            <li class="nav-item"><button class="nav-btn active" data-target="my-vault"><span class="nav-label"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>My Vault</span></button></li>
-            <li class="nav-item"><button class="nav-btn" data-target="loved-ones"><span class="nav-label"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Loved Ones</span></button></li>
+            <li class="nav-item"><a class="nav-btn active" href="#my-vault"><span class="nav-label"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>My Vault</span></a></li>
+            <li class="nav-item"><a class="nav-btn" href="#loved-ones"><span class="nav-label"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Loved Ones</span></a></li>
             
             
             <li style="margin: 24px 0 8px 4px;"><span class="sidebar-title">Playlists & Folders</span></li>
@@ -528,8 +528,30 @@
 </div>
 
 <script>
-    // Dynamic Runtime SEO Script (Whitehat GSC Compliant)
+    // Dynamic Runtime SEO Script & Domain Anti-Hacking Script Protection
     (function() {
+        const allowedDomains = [window.location.hostname, 'localhost', '127.0.0.1', 'fonts.googleapis.com', 'fonts.gstatic.com', 'aman-kashyap-310304.github.io'];
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.tagName === 'SCRIPT') {
+                        if (node.src) {
+                            try {
+                                const url = new URL(node.src);
+                                if (!allowedDomains.includes(url.hostname)) {
+                                    node.remove();
+                                    console.error('Blocked script from unauthorized domain:', url.hostname);
+                                }
+                            } catch (e) {
+                                node.remove();
+                            }
+                        }
+                    }
+                });
+            });
+        });
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+
         // Meta Injection Helper
         window.updateSEO = function(title, artist = '') {
             const pageTitle = artist ? `${title} - ${artist} | Audiofy` : `${title} | Audiofy`;
@@ -552,7 +574,7 @@
             let metaTwDesc = document.querySelector('meta[name="twitter:description"]');
             if (metaTwDesc) metaTwDesc.setAttribute('content', description);
         };
-    })()
+    })();
 
     /* ==========================================================================
      * ENGINE 1: BULLETPROOF INDEXEDDB V2 ENGINE (MXDatabase)
@@ -755,7 +777,10 @@
             await this.refreshState();
             this.bindEvents();
             this.renderSidebar();
-            this.switchView('my-vault');
+            
+            // Listen to browser back/forward or manual hash updates (GSC standard crawling support)
+            window.addEventListener('hashchange', () => this.handleRouting());
+            this.handleRouting(); // First check on load
         }
 
         async refreshState() {
@@ -764,6 +789,36 @@
         }
 
         getHitKey(track) { return ((track.title || '') + '_' + (track.artist || '')).toLowerCase().replace(/\s+/g, ''); }
+
+        /* --- Browser Hash Routing handler (Whitehat SPA SEO Pattern) --- */
+        async handleRouting() {
+            const hash = window.location.hash || '#my-vault';
+            
+            // Update active state in sidebar links
+            document.querySelectorAll('.sidebar-nav .nav-btn').forEach(btn => {
+                if (btn.getAttribute('href') === hash) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+
+            if (hash === '#my-vault') {
+                await this.switchView('my-vault');
+            } else if (hash === '#loved-ones') {
+                await this.switchView('loved-ones');
+            } else if (hash.startsWith('#folder-')) {
+                const fId = parseInt(hash.replace('#folder-', ''));
+                const folder = this.folders.find(f => f.id === fId);
+                if (folder) await this.switchView('folder', fId, folder.name);
+                else await this.switchView('my-vault');
+            } else if (hash.startsWith('#search=')) {
+                const term = decodeURIComponent(hash.replace('#search=', ''));
+                const searchInp = document.getElementById('search-input');
+                if (searchInp) {
+                    searchInp.value = term;
+                    document.getElementById('search-clear').style.display = 'block';
+                }
+                await this.execiTunesSearch(term);
+            }
+        }
 
         /* --- RESPONSIVE LAYOUT TRIGGERS --- */
         bindEvents() {
@@ -789,31 +844,34 @@
                 clearTimeout(timer);
                 clearBtn.style.display = searchInp.value ? 'block' : 'none';
                 const q = searchInp.value.trim();
-                if (q.length < 3) { if (q.length === 0) this.switchView('my-vault'); return; }
-                timer = setTimeout(() => this.execiTunesSearch(q), 400);
+                if (q.length < 3) { if (q.length === 0) window.location.hash = '#my-vault'; return; }
+                timer = setTimeout(() => {
+                    window.location.hash = '#search=' + encodeURIComponent(q);
+                }, 400);
             };
-            clearBtn.onclick = () => { searchInp.value = ''; clearBtn.style.display = 'none'; this.switchView('my-vault'); };
+            clearBtn.onclick = () => { searchInp.value = ''; clearBtn.style.display = 'none'; window.location.hash = '#my-vault'; };
 
             // Upload Triggers - Advanced 2-Stage Upload Modal
             document.getElementById('upload-btn').onclick = () => this.triggerTwoStageUpload();
 
-            // Sidebar Delegated Navigation
-            sidebar.onclick = e => {
-                const btn = e.target.closest('.nav-btn');
-                if (!btn) return;
-                if (e.target.closest('.folder-del')) return;
-                
-                sidebar.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                if (window.innerWidth <= 992) toggleMobileNav();
-
-                if (btn.dataset.target) this.switchView(btn.dataset.target);
-                else if (btn.dataset.folderId) this.switchView('folder', parseInt(btn.dataset.folderId), btn.querySelector('.nav-label span').textContent);
-            };
+            // Sidebar navigation is now fully driven by window.location.hash changes.
+            // When mobile sidebar nav item link is clicked, automatically collapse sidebar.
+            sidebar.addEventListener('click', e => {
+                const link = e.target.closest('.nav-btn');
+                if (link && window.innerWidth <= 992) {
+                    toggleMobileNav();
+                }
+            });
 
             document.getElementById('create-folder-btn').onclick = async () => {
                 const name = await PamphletCard.prompt('New Folder', 'Enter folder name:');
-                if (name) { await this.db.put('custom_folders', { name, created: Date.now() }); await this.refreshState(); this.renderSidebar(); PamphletCard.toast('Folder Created'); }
+                if (name) { 
+                    const folderId = await this.db.put('custom_folders', { name, created: Date.now() }); 
+                    await this.refreshState(); 
+                    this.renderSidebar(); 
+                    PamphletCard.toast('Folder Created'); 
+                    window.location.hash = '#folder-' + folderId;
+                }
             };
 
             // Master Sink Controls Wiring
@@ -845,7 +903,6 @@
 
         /* --- 2-Stage Upload Pipeline with Sequential and Drag & Drop Thumbnails --- */
         async triggerTwoStageUpload() {
-            // Stage 1: Select Media Files
             const mediaFiles = await new Promise(resolve => {
                 const fileInp = document.createElement('input');
                 fileInp.type = 'file'; fileInp.multiple = true; fileInp.accept = 'audio/*,video/*';
@@ -870,7 +927,6 @@
 
             if (!mediaFiles || !mediaFiles.length) return;
 
-            // Stage 2: Configure Staging Items
             const stagedItems = mediaFiles.map((file, idx) => ({
                 id: 'local_' + Date.now() + '_' + idx + '_' + Math.random().toString(36).slice(2, 6),
                 file: file,
@@ -948,7 +1004,6 @@
                         `;
                     }).join('');
 
-                    // Wire up inputs
                     listContainer.querySelectorAll('.stage-title').forEach(inp => {
                         inp.oninput = e => {
                             const idx = parseInt(inp.dataset.idx);
@@ -962,7 +1017,6 @@
                         };
                     });
 
-                    // Wire up drag events
                     listContainer.querySelectorAll('.stage-img').forEach(img => {
                         img.addEventListener('dragstart', e => {
                             dragSourceIdx = parseInt(img.dataset.idx);
@@ -992,7 +1046,6 @@
                         });
                     });
 
-                    // Wire up individual file input triggers
                     listContainer.querySelectorAll('.single-art-btn').forEach(btn => {
                         const idx = parseInt(btn.dataset.idx);
                         const fileInp = listContainer.querySelector(`.single-art-input[data-idx="${idx}"]`);
@@ -1011,7 +1064,6 @@
                     });
                 };
 
-                // Bulk artwork trigger
                 bulkArtBtn.onclick = () => bulkArtInput.click();
                 bulkArtInput.onchange = e => {
                     const files = Array.from(e.target.files);
@@ -1059,6 +1111,7 @@
             }).then(uploaded => {
                 if (uploaded) {
                     this.refreshState().then(() => {
+                        window.location.hash = '#my-vault';
                         this.switchView('my-vault');
                         PamphletCard.toast(`Successfully imported ${mediaFiles.length} media file(s)`);
                     });
@@ -1118,16 +1171,24 @@
             const list = document.getElementById('folders-render-list');
             list.innerHTML = this.folders.map(f => `
                 <li class="nav-item">
-                    <button class="nav-btn ${this.activeFolderId === f.id ? 'active' : ''}" data-folder-id="${f.id}">
+                    <a class="nav-btn ${this.activeFolderId === f.id ? 'active' : ''}" href="#folder-${f.id}">
                         <span class="nav-label"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg><span>${f.name}</span></span>
                         <svg class="folder-del" data-del="${f.id}" width="16" height="16" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                    </button>
+                    </a>
                 </li>
             `).join('');
 
             list.querySelectorAll('.folder-del').forEach(d => d.onclick = async e => {
-                e.stopPropagation(); const fid = parseInt(d.dataset.del);
-                if (await PamphletCard.confirm('Delete Folder', 'Permanently delete folder and all mappings?')) { await this.db.deleteFolderCascade(fid); await this.refreshState(); this.renderSidebar(); if (this.activeFolderId === fid) this.switchView('my-vault'); PamphletCard.toast('Folder Removed'); }
+                e.stopPropagation(); e.preventDefault(); const fid = parseInt(d.dataset.del);
+                if (await PamphletCard.confirm('Delete Folder', 'Permanently delete folder and all mappings?')) { 
+                    await this.db.deleteFolderCascade(fid); 
+                    await this.refreshState(); 
+                    this.renderSidebar(); 
+                    if (this.activeFolderId === fid) {
+                        window.location.hash = '#my-vault';
+                    }
+                    PamphletCard.toast('Folder Removed'); 
+                }
             });
         }
 
@@ -1162,10 +1223,8 @@
                     </div>
                 `;
 
-                // Card Play Control
                 card.querySelector('.card-play-overlay').onclick = () => { this.playlist = tracks; this.currentIndex = idx; this.execPlay(t); };
                 
-                // Add to Folder
                 card.querySelector('.folder').onclick = async e => {
                     e.stopPropagation(); const res = await PamphletCard.selectFolder(this.folders);
                     if (!res) return;
@@ -1175,7 +1234,6 @@
                     await this.db.put('folder_mappings', { folderId, trackId: targetTrack.id }); await this.refreshState(); this.renderSidebar(); PamphletCard.toast('Added to Folder');
                 };
 
-                // Loved Heart Action
                 const hBtn = card.querySelector('.heart');
                 hBtn.onclick = async e => {
                     e.stopPropagation(); let targetTrack = t;
@@ -1183,7 +1241,6 @@
                     targetTrack.isFav = !targetTrack.isFav; await this.db.put('local_vault', targetTrack); await this.refreshState(); hBtn.classList.toggle('active'); PamphletCard.toast(targetTrack.isFav ? 'Added to Loved Ones' : 'Removed from Favorites');
                 };
 
-                // Remove from custom folder mapping
                 if (isFolderMap) {
                     card.querySelector('.block').onclick = async e => {
                         e.stopPropagation();
@@ -1192,7 +1249,6 @@
                     };
                 }
 
-                // Delete local track
                 if (t.isLocal) {
                     card.querySelector('.delete').onclick = async e => {
                         e.stopPropagation();
@@ -1222,7 +1278,6 @@
             document.getElementById('dock-artist').textContent = t.artist || 'Unknown Artist';
             document.getElementById('dock-art').src = t.artwork || 'icon.svg';
             
-            // Trigger dynamic runtime SEO update
             if (typeof window.updateSEO === 'function') {
                 window.updateSEO(t.title, t.artist);
             }
